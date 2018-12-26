@@ -1,0 +1,2 @@
+git rm --cached claims.csv
+git rm --cached result.csv
