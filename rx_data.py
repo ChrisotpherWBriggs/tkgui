@@ -6,17 +6,53 @@ import os
 
 
 
-def writebat():
-    b2 = search.get()
+def claimSearch():
     os.chdir("C:\Users\CBriggs\Desktop\Python Scripts")
-    writing = open("make.bat", "w")
-    writing.write("c:\n")
-    writing.write(" ")
-    writing.write("cd c:\\program files (x86)\\gnuwin32\\bin \n")
-    writing.write(" ")
-    writing.write("awk -F\",\" \"{ if ($4 == " + "\"" + str(b2) + "\") print $0 }\"" + " \"C:\Users\CBriggs\Desktop\Python Scripts\claims.csv\" > " + "\"C:\Users\CBriggs\Desktop\Python Scripts\\result.csv\"")
-    writing.close()
-    os.system("make.bat")
+
+    s1= search.get()
+    s2 = search1.get()
+    s3 = search2.get()
+
+    csvfile = open("claims.csv", "rb")
+    outfile = open("result.csv", "wb")
+    outfile2 = csv.writer(outfile)
+    readCSV = csv.reader(csvfile, delimiter=",")
+
+
+    if s1 and s2 and s3:
+        for row in readCSV:
+            if s1.upper() == row[0] and s2.upper() == row[1]  and s3.upper == row[3] :
+                outfile2.writerow(row)
+    elif s1 and s2 and not s3:
+        for row in readCSV:
+            if s1.upper() == row[0] and s2.upper() == row[1] in row:
+                outfile2.writerow(row)
+    elif s1 and s3 and not s2:
+        for row in readCSV:
+            if s1.upper() == row[0] and s3.upper == row[3] in row:
+                outfile2.writerow(row)
+    elif s2 and s3 and not s1:
+        for row in readCSV:
+            if s2.upper() == row[1] and s3.upper == row[3] in row:
+                outfile2.writerow(row)
+    elif s1 and not s2 and not s3:
+        for row in readCSV:
+            if s1.upper() == row[0] in row:
+                outfile2.writerow(row)
+    elif s2 and not s1 and not s3:
+        for row in readCSV:
+            if s2.upper() == row[1] in row:
+                outfile2.writerow(row)
+    elif s3 and not s1 and not s2:
+        for row in readCSV:
+            if s3.upper() == row[3] in row:
+                outfile2.writerow(row)
+    else:
+        print("no terms found")
+
+    csvfile.close()
+    outfile.close()
+
     y = []
     infile = open("result.csv", "rb")
     for x in infile:
@@ -39,29 +75,48 @@ def writebat():
 
 
 
-
+#create main window
 root = Tk()
 root.title("Rx Tracker")
 root.geometry("1024x768")
 
+#create canvas
 canvas = Canvas(root,width= 400, height = 125)
-canvas.pack()
 
+#image
 img = ImageTk.PhotoImage(Image.open("logo.png"))
 canvas.create_image(20,20, anchor=NW, image=img)
 canvas.config(bg="white")
 
+#frame
 frame = Frame(root)
-frame.pack()
+frame2 = Frame(root)
 
-label = Label(frame, text="Enter Group Id: ")
-label.pack(side=LEFT)
-search = Entry(frame)
-search.pack(padx = 10, pady = 5)
+#labels
+label = Label(frame2, text="Enter Last Name:")
+label1 = Label(frame2, text="Enter First Name: ")
+label2 = Label(frame2, text="Enter Group ID:")
 
-b1 = Button(frame, text="Search", command=writebat)
+#entry boxes
+search = Entry(frame2)
+search1 = Entry(frame2)
+search2 = Entry(frame2)
 
-b1.pack()
+#button
+b1 = Button(frame2, text="Search", command=claimSearch)
+
+#layout
+canvas.grid(row=0, sticky=W)
+frame.grid(row=0, pady=25, sticky=W)
+frame2.grid(row=1, pady=25, sticky=W)
+label.grid(row=1, column=0)
+search.grid(row=1, column=1)
+label1.grid(row=2, column=0)
+search1.grid(row=2, column=1)
+label2.grid(row=3, column=0)
+search2.grid(row=3, column=1)
+b1.grid(row=4, columnspan=3)
+
 
 
 
